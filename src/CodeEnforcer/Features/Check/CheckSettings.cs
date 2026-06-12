@@ -4,7 +4,7 @@ using Spectre.Console.Cli;
 
 namespace CodeEnforcer;
 
-internal sealed class CodeEnforcerSettings : CommandSettings
+internal sealed class CheckSettings : CommandSettings
 {
     [CommandOption("--root <PATH>")]
     [Description("Repository root to scan. Defaults to the git root containing the discovered config.")]

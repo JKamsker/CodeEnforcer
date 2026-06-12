@@ -6,6 +6,8 @@ This page describes CLI configuration. Roslyn analyzer configuration uses `.edit
 
 When `--config` is not supplied, the tool walks from the current directory to parent directories until it finds `.config/code-enforcer/code-enforcer.json`. It then scans the containing git repository unless `--root` is supplied.
 
+Use `code-enforcer init` in a git repository to create the default config files and install the pre-commit hook.
+
 ## code-enforcer.json
 
 ```json

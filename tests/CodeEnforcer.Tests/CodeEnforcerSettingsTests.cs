@@ -7,7 +7,7 @@ public sealed class CodeEnforcerSettingsTests
     [Fact]
     public void RejectsOverrideWhenSoftLimitExceedsHardLimit()
     {
-        CodeEnforcerSettings settings = new()
+        CheckSettings settings = new()
         {
             SoftLineLimit = 501,
             HardLineLimit = 500
@@ -24,9 +24,9 @@ public sealed class CodeEnforcerSettingsTests
     [InlineData(false)]
     public void AppliesProjectFolderLimitOverride(bool usePrimaryOption)
     {
-        CodeEnforcerSettings settings = usePrimaryOption
-            ? new CodeEnforcerSettings { MaxFilesPerRootDirectory = 7 }
-            : new CodeEnforcerSettings { LegacyMaxFilesInProjectFolder = 7 };
+        CheckSettings settings = usePrimaryOption
+            ? new CheckSettings { MaxFilesPerRootDirectory = 7 }
+            : new CheckSettings { LegacyMaxFilesInProjectFolder = 7 };
         CodeEnforcerConfig config = new();
 
         settings.ApplyOverrides(config);
@@ -37,7 +37,7 @@ public sealed class CodeEnforcerSettingsTests
     [Fact]
     public void RejectsNonPositiveLimitOverride()
     {
-        CodeEnforcerSettings settings = new() { MaxFilesPerFolder = 0 };
+        CheckSettings settings = new() { MaxFilesPerFolder = 0 };
 
         Spectre.Console.ValidationResult result = settings.Validate();
 

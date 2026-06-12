@@ -31,6 +31,19 @@ Install the committed pre-commit hook:
 
 The hook runs `scripts/verify.ps1`.
 
+## CLI Features
+
+The CLI is feature-command based:
+
+- `code-enforcer` or `code-enforcer check`: Run the repository check.
+- `code-enforcer init`: Create `.config/code-enforcer` defaults, create `.githooks/pre-commit`, and configure `core.hooksPath`.
+
+For backwards compatibility, root-level check options still work:
+
+```powershell
+code-enforcer --root . --config .config/code-enforcer/code-enforcer.json
+```
+
 ## Build the tool package
 
 ```powershell

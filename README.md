@@ -26,10 +26,16 @@ From a repository that contains `.config/code-enforcer/code-enforcer.json`:
 code-enforcer
 ```
 
+Or explicitly:
+
+```powershell
+code-enforcer check
+```
+
 Run from this source checkout:
 
 ```powershell
-dotnet run --project src/CodeEnforcer -- --root . --config .config/code-enforcer/code-enforcer.json
+dotnet run --project src/CodeEnforcer -- check --root . --config .config/code-enforcer/code-enforcer.json
 ```
 
 Run the complete verification gate:
@@ -50,6 +56,22 @@ The installed command is:
 ```powershell
 code-enforcer
 ```
+
+## Initialize A Repository
+
+Create the default config files and install the git pre-commit hook:
+
+```powershell
+code-enforcer init
+```
+
+This creates:
+
+- `.config/code-enforcer/code-enforcer.json`
+- `.config/code-enforcer/justifications.json`
+- `.githooks/pre-commit`
+
+It also runs `git config core.hooksPath .githooks`. Existing files are kept unless `--force` is supplied.
 
 The same build script also creates `CodeEnforcer.Analyzers.0.1.0.nupkg`.
 

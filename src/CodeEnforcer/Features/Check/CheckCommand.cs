@@ -3,17 +3,17 @@ using Spectre.Console.Cli;
 
 namespace CodeEnforcer;
 
-internal sealed class CodeEnforcerCommand : Command<CodeEnforcerSettings>
+internal sealed class CheckCommand : Command<CheckSettings>
 {
     private readonly IAnsiConsole output;
     private readonly IAnsiConsole error;
 
-    public CodeEnforcerCommand()
-        : this(AnsiConsole.Console, CreateErrorConsole())
+    public CheckCommand()
+        : this(AnsiConsole.Console, ConsoleFactory.CreateErrorConsole())
     {
     }
 
-    internal CodeEnforcerCommand(IAnsiConsole output, IAnsiConsole error)
+    internal CheckCommand(IAnsiConsole output, IAnsiConsole error)
     {
         this.output = output;
         this.error = error;
@@ -21,7 +21,7 @@ internal sealed class CodeEnforcerCommand : Command<CodeEnforcerSettings>
 
     protected override int Execute(
         CommandContext context,
-        CodeEnforcerSettings settings,
+        CheckSettings settings,
         CancellationToken cancellationToken)
     {
         try
@@ -69,10 +69,4 @@ internal sealed class CodeEnforcerCommand : Command<CodeEnforcerSettings>
 
     private void WriteError(string message) =>
         error.MarkupLine($"[red]error:[/] {Markup.Escape(message)}");
-
-    private static IAnsiConsole CreateErrorConsole() =>
-        AnsiConsole.Create(new AnsiConsoleSettings
-        {
-            Out = new AnsiConsoleOutput(Console.Error)
-        });
 }
