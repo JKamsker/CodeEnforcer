@@ -1,11 +1,13 @@
 # Roslyn Analyzer
 
-`CodeEnforcer.Analyzers` reports the same rule IDs as the CLI during C# compilation:
+`CodeEnforcer.Analyzers` reports these CLI-compatible rule IDs during C# compilation:
 
 - `CE0001`: File exceeds the soft line limit without an exclusion.
 - `CE0002`: File exceeds the hard line limit without a non-empty justification.
 - `CE0003`: Folder contains too many C# files.
 - `CE0004`: Project folder contains too many C# files.
+
+The CLI also reports `CE0005` for repository-wide one-file-folder gaming. The analyzer does not report it because compilers do not expose all tracked non-C# files needed to prove a folder has one C# file and nothing else.
 
 The analyzer evaluates files visible to the current compilation. It does not call `git ls-files`, discover repository config files, or scan files that are not part of the project being compiled.
 

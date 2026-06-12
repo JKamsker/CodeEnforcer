@@ -128,6 +128,67 @@ public sealed class CodeEnforcerEngineTests
         Assert.Empty(violations);
     }
 
+    [Fact]
+    public void ReportsMoreThanTwoSingleCSharpFileFolders()
+    {
+        CodebaseSnapshot snapshot = Snapshot(
+            "src/A/Only.cs",
+            "src/B/Only.cs",
+            "src/C/Only.cs");
+
+        IReadOnlyList<CodeViolation> violations = CodeEnforcerEngine.Check(snapshot, new CodeEnforcerConfig());
+
+        CodeViolation violation = Assert.Single(violations);
+        Assert.Equal("CE0005", violation.Rule);
+        Assert.Equal(".", violation.Path);
+        Assert.Contains("src/A", violation.Message);
+        Assert.Contains("src/B", violation.Message);
+        Assert.Contains("src/C", violation.Message);
+    }
+
+    [Fact]
+    public void AllowsTwoSingleCSharpFileFolders()
+    {
+        CodebaseSnapshot snapshot = Snapshot(
+            "src/A/Only.cs",
+            "src/B/Only.cs");
+
+        IReadOnlyList<CodeViolation> violations = CodeEnforcerEngine.Check(snapshot, new CodeEnforcerConfig());
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void DoesNotCountFoldersWithOtherTrackedFiles()
+    {
+        CodebaseSnapshot snapshot = Snapshot(
+            "src/A/Only.cs",
+            "src/A/readme.md",
+            "src/B/Only.cs",
+            "src/B/Other.txt",
+            "src/C/Only.cs",
+            "src/C/Project.csproj");
+        CodeEnforcerConfig config = new() { MaxFilesInProjectFolder = 15 };
+
+        IReadOnlyList<CodeViolation> violations = CodeEnforcerEngine.Check(snapshot, config);
+
+        Assert.Empty(violations);
+    }
+
     private static IReadOnlyList<CodeViolation> Check(IReadOnlyList<CodeFile> files, CodeEnforcerConfig config) =>
         CodeEnforcerEngine.Check(files, config);
+
+    private static CodebaseSnapshot Snapshot(params string[] paths)
+    {
+        CodeFile[] files = paths
+            .Where(path => path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
+            .Select(path => new CodeFile(path, 10))
+            .ToArray();
+        HashSet<string> projectFolders = paths
+            .Where(path => path.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase))
+            .Select(PathUtility.GetDirectory)
+            .ToHashSet(StringComparer.Ordinal);
+
+        return new CodebaseSnapshot(files, projectFolders, paths);
+    }
 }

@@ -7,7 +7,7 @@
 [![Analyzers downloads](https://img.shields.io/nuget/dt/CodeEnforcer.Analyzers?label=analyzer%20downloads)](https://www.nuget.org/packages/CodeEnforcer.Analyzers)
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/)
 
-CodeEnforcer is a repository-local C# structure gate. It scans tracked C# files and fails when file length, folder size, or project-root folder size crosses configured limits without an explicit justification.
+CodeEnforcer is a repository-local C# structure gate. It scans tracked files and fails when file length, folder size, project-root folder size, or one-file-folder patterns cross enforced limits.
 
 The CLI is designed for CI and pre-commit usage: exclusions are centralized in `.config/code-enforcer/justifications.json` so structural debt is visible in review. The repository also ships `CodeEnforcer.Analyzers`, a Roslyn analyzer package for compiler and IDE feedback.
 
@@ -16,7 +16,9 @@ The CLI is designed for CI and pre-commit usage: exclusions are centralized in `
 - A `code-enforcer` .NET tool for repository-wide checks.
 - A `CodeEnforcer.Analyzers` package for compile-time and IDE feedback.
 - A one-command `init` flow that writes config files and installs the pre-commit hook.
-- The same rule IDs in both worlds: `CE0001` through `CE0004`.
+- CLI CRUD for exceptions and justifications, so teams do not need to hand-edit JSON.
+- Shared CLI/analyzer rule IDs: `CE0001` through `CE0004`.
+- A commit-time CLI-only anti-gaming rule: `CE0005`.
 
 ## Install
 
@@ -38,6 +40,7 @@ dotnet add package CodeEnforcer.Analyzers --prerelease
 - `CE0002`: A tracked C# file exceeds `maxLinesHard` and its exclusion has no non-empty justification.
 - `CE0003`: A folder contains more tracked C# files than `maxFilesPerDir`.
 - `CE0004`: A folder containing a `.csproj` contains more tracked C# files than `maxFilesPerRootDir`.
+- `CE0005`: The repository contains more than two folders that have exactly one tracked C# file and no other tracked files. This is CLI-only because it needs `git ls-files`.
 
 Generated and build-output files are skipped:
 
@@ -128,6 +131,20 @@ The same folder must also contain:
 ```
 
 See [configuration](docs/configuration.md) for CLI schema details and examples.
+
+## Manage Justifications
+
+Use the CLI to create, read, update, and delete entries in `.config/code-enforcer/justifications.json`:
+
+```powershell
+code-enforcer justifications add --type file --path src/App/Large.cs --justification "Scheduled for split"
+code-enforcer justifications list
+code-enforcer justifications show --type file --path src/App/Large.cs
+code-enforcer justifications update --type file --path src/App/Large.cs --justification "Split after adapter cleanup"
+code-enforcer justifications remove --type file --path src/App/Large.cs
+```
+
+`exceptions` is an alias for `justifications`, so `code-enforcer exceptions add ...` works the same way.
 
 ## Development
 

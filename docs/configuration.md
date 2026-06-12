@@ -27,6 +27,8 @@ Fields:
 - `maxLinesSoft`: Line count that requires a file exclusion.
 - `maxLinesHard`: Line count that requires a file exclusion with a non-empty justification.
 
+`CE0005` has no config field: the CLI rejects repositories with more than two folders that contain exactly one tracked C# file and no other tracked files. This commit-time rule is fixed because it is intended to catch one-file-folder gaming instead of creating another bypass.
+
 All paths use forward slashes internally. Windows backslashes are accepted in config and CLI inputs.
 
 ## justifications.json
@@ -60,3 +62,21 @@ Sections:
 - `rootFolders`: Project folders allowed to exceed `maxFilesPerRootDir`.
 
 `*` matches within one path segment. `**` matches across path segments.
+
+## Manage Entries From The CLI
+
+Prefer the CLI over hand-editing JSON:
+
+```powershell
+code-enforcer justifications list
+code-enforcer justifications list --type file
+code-enforcer justifications show --type file --path src/App/Large.cs
+code-enforcer justifications add --type file --path src/App/Large.cs --justification "Scheduled for split"
+code-enforcer justifications update --type file --path src/App/Large.cs --new-path src/App/Legacy.cs
+code-enforcer justifications update --type file --path src/App/Legacy.cs --clear-justification
+code-enforcer justifications remove --type file --path src/App/Legacy.cs
+```
+
+Use `--type file`, `--type folder`, or `--type root-folder`. The `exceptions` command branch is an alias for `justifications`.
+
+`add` creates `justifications.json` when `.config/code-enforcer/code-enforcer.json` exists and the sibling justifications file is missing.

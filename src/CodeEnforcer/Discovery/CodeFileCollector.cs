@@ -7,7 +7,8 @@ internal static class CodeFileCollector
     public static CodebaseSnapshot Collect(string root)
     {
         List<CodeFile> files = [];
-        foreach (string path in ListTrackedCSharpFiles(root))
+        string[] trackedPaths = ListTrackedFiles(root);
+        foreach (string path in trackedPaths.Where(IsCSharpFile))
         {
             string normalizedPath = PathUtility.Normalize(path);
             if (ShouldSkip(normalizedPath))
@@ -19,11 +20,17 @@ internal static class CodeFileCollector
             files.Add(new CodeFile(normalizedPath, File.ReadLines(fullPath).Count()));
         }
 
-        HashSet<string> projectFolders = ListTrackedProjectFiles(root)
+        HashSet<string> projectFolders = trackedPaths
+            .Where(IsProjectFile)
             .Select(path => PathUtility.GetDirectory(PathUtility.Normalize(path)))
             .ToHashSet(StringComparer.Ordinal);
 
-        return new CodebaseSnapshot(files, projectFolders);
+        string[] normalizedTrackedPaths = trackedPaths
+            .Select(PathUtility.Normalize)
+            .Where(path => !ShouldSkip(path))
+            .ToArray();
+
+        return new CodebaseSnapshot(files, projectFolders, normalizedTrackedPaths);
     }
 
     internal static bool ShouldSkip(string path) =>
@@ -32,13 +39,13 @@ internal static class CodeFileCollector
         path.EndsWith(".g.cs", StringComparison.OrdinalIgnoreCase) ||
         path.EndsWith(".Designer.cs", StringComparison.OrdinalIgnoreCase);
 
-    private static string[] ListTrackedCSharpFiles(string root) =>
-        ListTrackedFiles(root, "*.cs");
+    private static bool IsCSharpFile(string path) =>
+        path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase);
 
-    private static string[] ListTrackedProjectFiles(string root) =>
-        ListTrackedFiles(root, "*.csproj");
+    private static bool IsProjectFile(string path) =>
+        path.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase);
 
-    private static string[] ListTrackedFiles(string root, string pattern)
+    private static string[] ListTrackedFiles(string root)
     {
         ProcessStartInfo startInfo = new("git")
         {
@@ -48,8 +55,6 @@ internal static class CodeFileCollector
         startInfo.ArgumentList.Add("-C");
         startInfo.ArgumentList.Add(root);
         startInfo.ArgumentList.Add("ls-files");
-        startInfo.ArgumentList.Add("--");
-        startInfo.ArgumentList.Add(pattern);
 
         using Process process = Process.Start(startInfo)
             ?? throw new CodeEnforcerException("Failed to start git.", ExitCodes.InternalError);

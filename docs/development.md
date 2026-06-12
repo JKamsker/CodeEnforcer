@@ -37,6 +37,8 @@ The CLI is feature-command based:
 
 - `code-enforcer` or `code-enforcer check`: Run the repository check.
 - `code-enforcer init`: Create `.config/code-enforcer` defaults, create `.githooks/pre-commit`, and configure `core.hooksPath`.
+- `code-enforcer justifications ...`: List, show, add, update, and remove exception entries in `justifications.json`.
+- `code-enforcer exceptions ...`: Alias for `justifications`.
 
 For backwards compatibility, root-level check options still work:
 
