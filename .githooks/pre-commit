@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+set -eu
+
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1

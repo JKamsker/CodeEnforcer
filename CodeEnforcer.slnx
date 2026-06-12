@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CodeEnforcer/CodeEnforcer.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CodeEnforcer.Tests/CodeEnforcer.Tests.csproj" />
+  </Folder>
+</Solution>
