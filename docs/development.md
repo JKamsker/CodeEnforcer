@@ -39,6 +39,12 @@ The hook runs `scripts/verify.ps1`.
 
 The CLI and analyzer packages are written to `artifacts/packages`.
 
+Build a specific package version:
+
+```powershell
+./scripts/build-tool.ps1 -Version 0.1.0-ci.local
+```
+
 Install from the local package source:
 
 ```powershell
@@ -56,3 +62,11 @@ Install the analyzer package into a local consumer project:
 ```powershell
 dotnet add package CodeEnforcer.Analyzers --source ./artifacts/packages
 ```
+
+## NuGet Publishing
+
+CI publishes packages to NuGet.org only for pushes to `main` or `v*` tags in `JKamsker/CodeEnforcer`.
+
+- `main` pushes publish prerelease versions: `0.1.0-ci.<run_number>`.
+- `v*` tags publish stable versions: `v1.2.3` becomes `1.2.3`.
+- The NuGet API key is fetched through Bitwarden using `secrets.BW_ACCESS_TOKEN`.

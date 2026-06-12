@@ -1,6 +1,7 @@
 param(
   [string] $Configuration = 'Release',
-  [string] $OutputPath = 'artifacts/packages'
+  [string] $OutputPath = 'artifacts/packages',
+  [string] $Version = ''
 )
 
 $ErrorActionPreference = 'Stop'
@@ -15,10 +16,20 @@ $projects = @(
 )
 
 foreach ($project in $projects) {
-  dotnet pack `
-    (Join-Path $repoRoot $project) `
-    --configuration $Configuration `
-    --output $fullOutputPath
+  $packArguments = @(
+    'pack',
+    (Join-Path $repoRoot $project),
+    '--configuration',
+    $Configuration,
+    '--output',
+    $fullOutputPath
+  )
+
+  if ($Version.Length -gt 0) {
+    $packArguments += "-p:Version=$Version"
+  }
+
+  dotnet @packArguments
 
   if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
