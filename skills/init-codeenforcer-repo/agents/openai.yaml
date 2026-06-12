@@ -1,0 +1,4 @@
+interface:
+  display_name: "Init CodeEnforcer Repo"
+  short_description: "Initialize git repos with CodeEnforcer"
+  default_prompt: "Use $init-codeenforcer-repo to initialize this repository with git, a local CodeEnforcer tool, config files, and hooks."
