@@ -18,6 +18,10 @@ dotnet_style_qualification_for_property = false:suggestion
 dotnet_style_qualification_for_method = false:suggestion
 dotnet_style_qualification_for_event = false:suggestion
 dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggestion
+dotnet_code_enforcer_max_lines_soft = 300
+dotnet_code_enforcer_max_lines_hard = 500
+dotnet_code_enforcer_max_files_per_dir = 15
+dotnet_code_enforcer_max_files_per_root_dir = 5
 
 [*.md]
 trim_trailing_whitespace = false

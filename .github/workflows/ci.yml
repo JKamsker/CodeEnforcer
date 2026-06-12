@@ -37,6 +37,6 @@ jobs:
       - name: Upload package
         uses: actions/upload-artifact@v7.0.1
         with:
-          name: code-enforcer-tool-package
+          name: code-enforcer-packages
           path: artifacts/packages/*.nupkg
           if-no-files-found: error

@@ -2,6 +2,8 @@
 
 CodeEnforcer loads configuration from `.config/code-enforcer/code-enforcer.json` and exclusions from the sibling `justifications.json` file.
 
+This page describes CLI configuration. Roslyn analyzer configuration uses `.editorconfig`; see [analyzer](analyzer.md).
+
 When `--config` is not supplied, the tool walks from the current directory to parent directories until it finds `.config/code-enforcer/code-enforcer.json`. It then scans the containing git repository unless `--root` is supplied.
 
 ## code-enforcer.json

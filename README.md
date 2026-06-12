@@ -2,7 +2,7 @@
 
 CodeEnforcer is a repository-local C# structure gate. It scans tracked C# files and fails when file length, folder size, or project-root folder size crosses configured limits without an explicit justification.
 
-The tool is designed for CI and pre-commit usage: exclusions are centralized in `.config/code-enforcer/justifications.json` so structural debt is visible in review.
+The CLI is designed for CI and pre-commit usage: exclusions are centralized in `.config/code-enforcer/justifications.json` so structural debt is visible in review. The repository also ships `CodeEnforcer.Analyzers`, a Roslyn analyzer package for compiler and IDE feedback.
 
 ## Rules
 
@@ -51,6 +51,18 @@ The installed command is:
 code-enforcer
 ```
 
+The same build script also creates `CodeEnforcer.Analyzers.0.1.0.nupkg`.
+
+## Roslyn Analyzer
+
+Install the analyzer package into a consuming project:
+
+```powershell
+dotnet add package CodeEnforcer.Analyzers --source ./artifacts/packages
+```
+
+Configure analyzer limits and exclusions in `.editorconfig`. See [analyzer](docs/analyzer.md) for install, configuration, and CLI differences.
+
 ## Configuration
 
 CodeEnforcer walks from the current directory to parent directories until it finds:
@@ -65,7 +77,7 @@ The same folder must also contain:
 .config/code-enforcer/justifications.json
 ```
 
-See [configuration](docs/configuration.md) for schema details and examples.
+See [configuration](docs/configuration.md) for CLI schema details and examples.
 
 ## Development
 

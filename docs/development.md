@@ -37,7 +37,7 @@ The hook runs `scripts/verify.ps1`.
 ./scripts/build-tool.ps1
 ```
 
-The package is written to `artifacts/packages`.
+The CLI and analyzer packages are written to `artifacts/packages`.
 
 Install from the local package source:
 
@@ -49,4 +49,10 @@ Update an existing global install:
 
 ```powershell
 dotnet tool update --global --add-source ./artifacts/packages CodeEnforcer
+```
+
+Install the analyzer package into a local consumer project:
+
+```powershell
+dotnet add package CodeEnforcer.Analyzers --source ./artifacts/packages
 ```
