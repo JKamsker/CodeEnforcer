@@ -1,8 +1,36 @@
 # CodeEnforcer
 
+[![CI](https://github.com/JKamsker/CodeEnforcer/actions/workflows/ci.yml/badge.svg)](https://github.com/JKamsker/CodeEnforcer/actions/workflows/ci.yml)
+[![CodeEnforcer NuGet](https://img.shields.io/nuget/vpre/CodeEnforcer?label=tool)](https://www.nuget.org/packages/CodeEnforcer)
+[![CodeEnforcer downloads](https://img.shields.io/nuget/dt/CodeEnforcer?label=tool%20downloads)](https://www.nuget.org/packages/CodeEnforcer)
+[![Analyzers NuGet](https://img.shields.io/nuget/vpre/CodeEnforcer.Analyzers?label=analyzer)](https://www.nuget.org/packages/CodeEnforcer.Analyzers)
+[![Analyzers downloads](https://img.shields.io/nuget/dt/CodeEnforcer.Analyzers?label=analyzer%20downloads)](https://www.nuget.org/packages/CodeEnforcer.Analyzers)
+[![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/)
+
 CodeEnforcer is a repository-local C# structure gate. It scans tracked C# files and fails when file length, folder size, or project-root folder size crosses configured limits without an explicit justification.
 
 The CLI is designed for CI and pre-commit usage: exclusions are centralized in `.config/code-enforcer/justifications.json` so structural debt is visible in review. The repository also ships `CodeEnforcer.Analyzers`, a Roslyn analyzer package for compiler and IDE feedback.
+
+## What You Get
+
+- A `code-enforcer` .NET tool for repository-wide checks.
+- A `CodeEnforcer.Analyzers` package for compile-time and IDE feedback.
+- A one-command `init` flow that writes config files and installs the pre-commit hook.
+- The same rule IDs in both worlds: `CE0001` through `CE0004`.
+
+## Install
+
+Install the CLI tool:
+
+```powershell
+dotnet tool install --global CodeEnforcer --prerelease
+```
+
+Add the analyzer to a project:
+
+```powershell
+dotnet add package CodeEnforcer.Analyzers --prerelease
+```
 
 ## Rules
 
