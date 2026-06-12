@@ -32,6 +32,7 @@ Use `-Force` only when the user explicitly wants existing CodeEnforcer config or
 - Use NuGet.org as the package source unless the user supplies a local package source.
 - Include prerelease packages by default because CodeEnforcer may not have a stable release yet.
 - Preserve existing config and hook files unless the user asks to overwrite them.
+- Do not add entries to `justifications` during normal setup. Justifications are an absolute exception for explicit, case-specific user decisions and are very discouraged as a default workflow.
 
 ## Manual Commands
 
